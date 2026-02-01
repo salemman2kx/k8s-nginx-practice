@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-main-html
+  namespace: k8s-practice
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title>K8s Practice - Main App</title>
+      <style>
+        body {
+          font-family: 'Segoe UI', Arial, sans-serif;
+          background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+          color: #eee;
+          text-align: center;
+          padding: 80px 20px;
+          margin: 0;
+          min-height: 100vh;
+        }
+        h1 { color: #00d4ff; font-size: 2.8em; margin-bottom: 10px; }
+        .subtitle { color: #666; font-size: 1.1em; margin-bottom: 40px; }
+        .info-box {
+          background: rgba(0, 212, 255, 0.08);
+          border: 1px solid rgba(0, 212, 255, 0.3);
+          border-radius: 12px;
+          padding: 30px;
+          max-width: 480px;
+          margin: 0 auto;
+        }
+        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .info-row:last-child { border-bottom: none; }
+        .label { color: #00d4ff; font-weight: 600; }
+        .value { color: #ccc; }
+        .footer { color: #555; margin-top: 50px; font-size: 0.9em; }
+      </style>
+    </head>
+    <body>
+      <h1>&#128640; Kubernetes Practice</h1>
+      <p class="subtitle">Main Application — served by nginx-main container</p>
+      <div class="info-box">
+        <div class="info-row"><span class="label">Service</span><span class="value">Main Application</span></div>
+        <div class="info-row"><span class="label">Container</span><span class="value">nginx-main</span></div>
+        <div class="info-row"><span class="label">Port</span><span class="value">80 (NodePort 30080)</span></div>
+        <div class="info-row"><span class="label">Replicas</span><span class="value">3 pods</span></div>
+        <div class="info-row"><span class="label">Sidecar</span><span class="value">nginx-sidecar on port 8080</span></div>
+      </div>
+      <p class="footer">Visit <strong>localhost:30081</strong> to see the sidecar status page</p>
+    </body>
+    </html>

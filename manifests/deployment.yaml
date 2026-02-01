@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app
+  namespace: k8s-practice
+  labels:
+    app: nginx-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+        # ============================================
+        # Container 1: Main Nginx (serves port 80)
+        # ============================================
+        - name: nginx-main
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: app-credentials
+                  key: db_host
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-credentials
+                  key: db_user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-credentials
+                  key: db_password
+          volumeMounts:
+            - name: main-html
+              mountPath: /usr/share/nginx/html
+              readOnly: true
+
+        # ============================================
+        # Container 2: Sidecar Nginx (serves port 8080)
+        # ============================================
+        - name: nginx-sidecar
+          image: nginx:alpine
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: app-credentials
+                  key: db_host
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-credentials
+                  key: db_user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-credentials
+                  key: db_password
+          volumeMounts:
+            - name: sidecar-html
+              mountPath: /usr/share/nginx/html
+              readOnly: true
+            - name: sidecar-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+
+      # ============================================
+      # Volumes — links ConfigMaps into containers
+      # ============================================
+      volumes:
+        - name: main-html
+          configMap:
+            name: nginx-main-html
+        - name: sidecar-html
+          configMap:
+            name: nginx-sidecar-html
+        - name: sidecar-conf
+          configMap:
+            name: nginx-sidecar-conf

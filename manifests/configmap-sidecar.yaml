@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-sidecar-html
+  namespace: k8s-practice
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title>K8s Practice - Status</title>
+      <style>
+        body {
+          font-family: 'Segoe UI', Arial, sans-serif;
+          background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 100%);
+          color: #eee;
+          text-align: center;
+          padding: 80px 20px;
+          margin: 0;
+          min-height: 100vh;
+        }
+        h1 { color: #00ff88; font-size: 2.8em; margin-bottom: 10px; }
+        .subtitle { color: #666; font-size: 1.1em; margin-bottom: 40px; }
+        .status-box {
+          background: rgba(0, 255, 136, 0.08);
+          border: 1px solid rgba(0, 255, 136, 0.3);
+          border-radius: 12px;
+          padding: 30px;
+          max-width: 480px;
+          margin: 0 auto;
+        }
+        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .info-row:last-child { border-bottom: none; }
+        .label { color: #00ff88; font-weight: 600; }
+        .value { color: #ccc; }
+        .ok { color: #00ff88; font-weight: bold; }
+        .footer { color: #555; margin-top: 50px; font-size: 0.9em; }
+      </style>
+    </head>
+    <body>
+      <h1>&#128202; Status Dashboard</h1>
+      <p class="subtitle">Sidecar Monitor — served by nginx-sidecar container</p>
+      <div class="status-box">
+        <div class="info-row"><span class="label">Service</span><span class="value">Status Monitor</span></div>
+        <div class="info-row"><span class="label">Container</span><span class="value">nginx-sidecar</span></div>
+        <div class="info-row"><span class="label">Port</span><span class="value">8080 (NodePort 30081)</span></div>
+        <div class="info-row"><span class="label">Main App</span><span class="value ok">&#10003; Running on port 80</span></div>
+        <div class="info-row"><span class="label">Credentials</span><span class="value">Stored in K8s Secret</span></div>
+      </div>
+      <p class="footer">Credentials are injected as environment variables via a Kubernetes Secret — use <strong>kubectl exec</strong> to verify</p>
+    </body>
+    </html>
